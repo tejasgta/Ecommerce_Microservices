@@ -21,6 +21,9 @@ public class ProductCategoryService {
 	public ProductCategory addProductCategory(ProductCategory category) {
 		return repo.save(category);
 	}
-	
-	
+
+
+	public void deleteCategory(Long id) {
+		repo.deleteById(id);
+	}
 }
