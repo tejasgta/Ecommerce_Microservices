@@ -1,18 +1,12 @@
 package com.product.entity;
 
+import java.util.HashSet;
 import java.util.Set;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "PRODUCT_CATEGORY_TBL")
@@ -29,14 +23,18 @@ public class ProductCategory {
 	@Column(name = "category_name")
 	@NotNull
 	private String categoryName;
-	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
-	private Set<Product> products;
 
-	@Override
-	public String toString() {
-		return "ProductCategory [id=" + id + ", categoryName=" + categoryName + ", products=" + products + "]";
-	} 
-	
-	
+	@JsonIgnore
+	@OneToMany(mappedBy = "category")
+	private Set<Product> productSet;
+
+	public void addProduct(Product product) {
+		if(product != null){
+			if(productSet == null){
+				productSet = new HashSet<>();
+			}
+			productSet.add(product);
+			product.setCategory(this);
+		}
+	}
 }
