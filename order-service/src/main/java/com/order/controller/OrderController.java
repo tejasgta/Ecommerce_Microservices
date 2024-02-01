@@ -1,49 +1,53 @@
 package com.order.controller;
 
-import com.order.entity.Answer;
-import com.order.entity.Question;
-import com.order.service.AnswerService;
-import com.order.service.QuestionService;
+import com.order.entity.Order;
+import com.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 
 	@Autowired
-	private QuestionService questionService;
-	@Autowired
-	private AnswerService answerService;
-
+	private OrderService orderService;
 	
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello from Order Service";
+	@GetMapping
+	public ResponseEntity<List<Order>> getOrders() {
+		return new ResponseEntity<>(orderService.getOrders(), HttpStatus.OK);
 	}
 
-	@GetMapping("/question")
-	public ResponseEntity<List<Question>> getQuestions(){
-		return new ResponseEntity<>(questionService.getQuestions(), HttpStatus.OK);
+	@GetMapping("/{id}")
+	public ResponseEntity getOrders(@PathVariable Long id) {
+		Optional<Order> order = orderService.getOrderById(id);
+		if (order.isPresent()) {
+			return new ResponseEntity<>(order.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Order with Id: "+id+" not found!", HttpStatus.NOT_FOUND);
+		}
 	}
 
-	@PostMapping("/question")
-	public Question saveQuestion(@RequestBody Question question){
-		return questionService.saveQuestion(question);
+	@PostMapping
+	public ResponseEntity<Order> addOrder(@RequestBody Order order){
+		return new ResponseEntity<>(orderService.addOrder(order),HttpStatus.CREATED);
 	}
 
-	@GetMapping("/answer")
-	public ResponseEntity<List<Answer>> getAnswers(){
-		return new ResponseEntity<>(answerService.getAnswers(), HttpStatus.OK);
+	@DeleteMapping("/{id}")
+	public String deleteOrder(@PathVariable Long id){
+		if(orderService.getOrderById(id).isEmpty()){
+			return "Order with Id: " + id + " not found";
+		}
+		else{
+			orderService.deleteOrder(id);
+			return "Order with Id: " + id + " deleted successfully";
+		}
 	}
 
-	@PostMapping("/answer")
-	public Answer saveAnswer(@RequestBody Answer answer){
-		return answerService.saveAnswer(answer);
-	}
+
 
 }

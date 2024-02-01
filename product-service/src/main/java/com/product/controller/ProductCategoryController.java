@@ -1,6 +1,7 @@
 package com.product.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,38 @@ import jakarta.validation.Valid;
 public class ProductCategoryController {
 
 	@Autowired
-	private ProductCategoryService service;
+	private ProductCategoryService categoryService;
 
 	@GetMapping
 	public ResponseEntity<List<ProductCategory>> getProductCategories() {
-		return new ResponseEntity<>(service.getProductCategories(), HttpStatus.OK);
+		return new ResponseEntity<>(categoryService.getProductCategories(), HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity getProductCategoryById(@PathVariable Long id) {
+		Optional<ProductCategory> productCategory = categoryService.getProductCategoryById(id);
+		if (productCategory.isPresent()) {
+			return new ResponseEntity<ProductCategory>(productCategory.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Product Category with Id: "+ id+ " not found!",HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductCategory> addCategory(@Valid @RequestBody ProductCategory category){
-		System.out.println(category.getCategoryName());
-		return new ResponseEntity<>(service.addProductCategory(category),HttpStatus.CREATED);
+	public ResponseEntity<ProductCategory> addProductCategory(@Valid @RequestBody ProductCategory category){
+		return new ResponseEntity<>(categoryService.addProductCategory(category),HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{id}")
 	public String deleteCategory(@PathVariable Long id){
-		service.deleteCategory(id);
-		return "Category with Id: " + id + "deleted successfully";
+		Optional<ProductCategory> productCategory = categoryService.getProductCategoryById(id);
+		if(productCategory.isEmpty()){
+			return "Product Category with Id: " + id + " not found";
+		}
+		else{
+			categoryService.deleteCategory(id);
+			return "Product Category with Id: " + id + " deleted successfully";
+		}
 	}
 
 }

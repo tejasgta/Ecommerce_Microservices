@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -54,8 +55,9 @@ public class Order {
 	@Column(name = "last_updated")
 	@UpdateTimestamp
 	private Date lastUpdated;
-	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "order")
 	Set<OrderItem> orderItems = new HashSet<>();
 	
 //	@ManyToOne
@@ -70,13 +72,13 @@ public class Order {
 //	@JoinColumn(name = "billing_address_id",referencedColumnName = "id")
 //	private Address billingAddress;
 	
-	public void add(OrderItem item) {
-		if(item!=null) {
-			if(orderItems == null)
-				orderItems = new HashSet<>();
-			orderItems.add(item);
-			item.setOrder(this);
-		}
-	}	
+//	public void add(OrderItem item) {
+//		if(item!=null) {
+//			if(orderItems == null)
+//				orderItems = new HashSet<>();
+//			orderItems.add(item);
+//			item.setOrder(this);
+//		}
+//	}
 }
 

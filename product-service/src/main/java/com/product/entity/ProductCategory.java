@@ -1,7 +1,9 @@
 package com.product.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -21,13 +23,18 @@ public class ProductCategory {
 	@Column(name = "category_name")
 	@NotNull
 	private String categoryName;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "product_fk",referencedColumnName = "id")
-	private Set<Product> products;
 
-	@Override
-	public String toString() {
-		return "ProductCategory [id=" + id + ", categoryName=" + categoryName + ", products=" + products + "]";
+	@JsonIgnore
+	@OneToMany(mappedBy = "category")
+	private Set<Product> productSet;
+
+	public void addProduct(Product product) {
+		if(product != null){
+			if(productSet == null){
+				productSet = new HashSet<>();
+			}
+			productSet.add(product);
+			product.setCategory(this);
+		}
 	}
 }
