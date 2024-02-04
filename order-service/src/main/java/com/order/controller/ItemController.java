@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,9 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @GetMapping
     public ResponseEntity<List<OrderItem>> getItems(){
@@ -56,6 +60,11 @@ public class ItemController {
         else{
             return new ResponseEntity<>("Item with Id: " + itemId + " or order with Id: " + orderId + " not found!",HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/products")
+    public String getProducts(){
+        return restTemplate.getForObject("http://PRODUCT-SERVICE/products",String.class);
     }
 
 

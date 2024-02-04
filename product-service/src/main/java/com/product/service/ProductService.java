@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.product.entity.ProductCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +21,13 @@ public class ProductService {
 	@Autowired
 	private ProductCategoryService categoryService;
 
+	private static Logger logger = LoggerFactory.getLogger(ProductService.class);
+
 	public List<Product> getProducts(){
-		return productRepository.findAll();
+		logger.info("Inside getProducts of ProductService");
+		List<Product> list = productRepository.findAll();
+		logger.info("Product List : "+list);
+		return list;
 	}
 
 	public Product addProduct(Product product) {

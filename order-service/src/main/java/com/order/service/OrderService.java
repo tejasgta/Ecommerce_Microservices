@@ -1,7 +1,10 @@
 package com.order.service;
 
+import com.order.dto.Product;
 import com.order.entity.Order;
 import com.order.repository.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,8 +21,13 @@ public class OrderService {
 	@Autowired
 	private RestTemplate template;
 
-	public void getProducts() {
-		template.getForObject("", null);
+	private static Logger logger = LoggerFactory.getLogger(OrderService.class);
+
+	public List<Product> getProducts() {
+		logger.info("Inside getProducts of OrderService");
+		List<Product> productList=template.getForObject("http://PRODUCT-SERVICE/products", List.class);
+		logger.info("Product List : "+productList);
+		return productList;
 	}
 
 	private static String generateOrderTrackingNumber() {
@@ -29,30 +37,6 @@ public class OrderService {
 
 		return UUID.randomUUID().toString();
 	}
-
-	public void saveOrder() {
-
-//		OrderItem item1 = new OrderItem();
-//		item1.setImageUrl("https://www.google.com");
-//		item1.setQuantity(1);
-//		item1.setUnitPrice(BigDecimal.valueOf(12000.00));
-//		item1.setProductId(1L);
-//
-//		OrderItem item2 = new OrderItem();
-//		item2.setImageUrl("https://www.google.com");
-//		item2.setQuantity(1);
-//		item2.setUnitPrice(BigDecimal.valueOf(13499));
-//		item2.setProductId(1L);
-//
-//		Order order = new Order();
-//		order.setOrderTrackingNumber(generateOrderTrackingNumber());
-//		order.setTotalQuantity(2);
-//		order.setTotalPrice(BigDecimal.valueOf(12000));
-//		order.setStatus("SHIPPED");
-//
-//		orderRepository.save(order);
-	}
-
 	public List<Order> getOrders() {
 		return orderRepository.findAll();
 	}

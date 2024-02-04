@@ -1,5 +1,6 @@
 package com.order.controller;
 
+import com.order.dto.Product;
 import com.order.entity.Order;
 import com.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class OrderController {
 	@GetMapping
 	public ResponseEntity<List<Order>> getOrders() {
 		return new ResponseEntity<>(orderService.getOrders(), HttpStatus.OK);
+	}
+
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getProducts() {
+		return new ResponseEntity<>(orderService.getProducts(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
