@@ -3,6 +3,9 @@ spring:
     name: PRODUCT-SERVICE
   config:
     import: configserver:http://localhost:9101
+  jpa:
+    hibernate:
+      ddl-auto: create
         
 server:
   port: 8082

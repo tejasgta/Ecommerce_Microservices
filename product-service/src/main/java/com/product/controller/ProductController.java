@@ -20,7 +20,17 @@ public class ProductController {
 	
 	@GetMapping
 	public ResponseEntity<List<Product>> getProducts(){
-		return new ResponseEntity<List<Product>>(productService.getProducts(),HttpStatus.OK);
+		List<Product> products = productService.getProducts();
+        return new ResponseEntity<List<Product>>(productService.getProducts(),HttpStatus.OK);
+	}
+
+	@GetMapping("/custom")
+	public void getProducts1(){
+		List<Product> products = productService.getProducts();
+//		System.out.println(products);
+//        for (Product product : products) {
+//			System.out.println(product.getDetails());
+//        }
 	}
 
 	@GetMapping("/{id}")

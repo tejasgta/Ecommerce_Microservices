@@ -52,5 +52,8 @@ public class Product {
 	@Column(name = "last_updated")
 	@UpdateTimestamp
 	private Date lastUpdated;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	private ProductDetails details;
 }
 
