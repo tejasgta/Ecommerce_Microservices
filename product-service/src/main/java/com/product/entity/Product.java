@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PRODUCT_TBL")
+@Table(name = "product")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,8 +23,8 @@ public class Product {
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "category_id",referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name = "category_id",nullable = false)
 	private ProductCategory category;
 
 	@Column(name = "name")

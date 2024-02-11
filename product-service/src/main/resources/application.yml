@@ -3,6 +3,9 @@ spring:
     name: PRODUCT-SERVICE
   config:
     import: configserver:http://localhost:9101
+  data:
+    rest:
+      base-path: /api
         
 server:
   port: 8082

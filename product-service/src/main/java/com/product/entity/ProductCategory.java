@@ -3,14 +3,15 @@ package com.product.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
-@Table(name = "PRODUCT_CATEGORY_TBL")
-@Data
+@Table(name = "product_category")
+//@Data --known bug with many to one annotation
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductCategory {
@@ -24,8 +25,7 @@ public class ProductCategory {
 	@NotNull
 	private String categoryName;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "category")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
 	private Set<Product> productSet;
 
 	public void addProduct(Product product) {

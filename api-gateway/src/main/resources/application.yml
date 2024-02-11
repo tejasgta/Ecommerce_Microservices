@@ -5,11 +5,21 @@ spring:
     import: configserver:http://localhost:9101
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=Access-Control-Allow-Origin, *
       routes:
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/products/**,/products-category/**
+            - Path=/api/products/**,/api/product-category/**
           filters:
             - name: CircuitBreaker
               args:
