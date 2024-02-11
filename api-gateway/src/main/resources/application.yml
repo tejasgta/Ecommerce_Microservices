@@ -25,6 +25,13 @@ spring:
               args:
                 name: product-service
                 fallbackUri: forward:/productFallback
+            - name: Retry
+              args:
+                retries: 3
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
 
         - id: order-service
           uri: lb://ORDER-SERVICE
@@ -35,6 +42,13 @@ spring:
               args:
                 name: order-service
                 fallbackUri: forward:/orderFallback
+            - name: Retry
+              args:
+                retries: 3
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
 server:
   port: 9001
 
@@ -43,3 +57,25 @@ management:
     web:
       exposure:
         include: "*"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      product-service:
+        slidingWindowSize: 10                     #unit request
+        permittedNumberOfCallsInHalfOpenState: 5  #unit request
+        failureRateThreshold: 50                  #percent
+        waitDurationInOpenState: 10000            #10 seconds
+        registerHealthIndicator: true
+      order-service:
+        slidingWindowSize: 10                     #unit request
+        permittedNumberOfCallsInHalfOpenState: 5  #unit request
+        failureRateThreshold: 50                  #percent
+        waitDurationInOpenState: 10000            #10 seconds
+        registerHealthIndicator: true
+  timelimiter:
+    instances:
+      product-service:
+        timeoutDuration: 2s
+      order-service:
+        timeoutDuration: 2s
